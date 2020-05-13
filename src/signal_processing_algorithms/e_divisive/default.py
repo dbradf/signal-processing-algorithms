@@ -8,16 +8,19 @@ from signal_processing_algorithms.e_divisive.significance_test import (
 )
 
 
-def default_implementation() -> EDivisive:
+def default_implementation(impl: str) -> EDivisive:
     """
     Create a default implementation of E-Divisive.
 
     :return: The default implementation.
     """
-    if cext_calculator.C_EXTENSION_LOADED:
+    if impl == "cext":
+        assert cext_calculator.C_EXTENSION_LOADED
         # TODO: Remove mypy exception once implemented: https://github.com/python/mypy/issues/5018
+        print("Cext")
         calculator: EDivisiveCalculator = cext_calculator  # type: ignore
     else:
+        print("numpy")
         calculator = numpy_calculator  # type: ignore
     tester = QHatPermutationsSignificanceTester(
         calculator=calculator, pvalue=0.05, permutations=100
